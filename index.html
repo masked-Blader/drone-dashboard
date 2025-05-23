@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#007bff">
+<link rel="icon" href="icon-192.png">
+  <title>Drone Info Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f0f4f8;
+    }
+    h1 {
+      text-align: center;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1rem auto;
+      width: 300px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .label {
+      font-weight: bold;
+    }
+    .buttons {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    button {
+      margin: 0.3rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #languageBtn {
+      background-color: #28a745;
+    }
+    #languageBtn:hover {
+      background-color: #1e7e34;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="title">Drone Live Info</h1>
+  <div class="card">
+    <p><span class="label" data-key="latitude">Latitude:</span> <span id="lat">Loading...</span></p>
+    <p><span class="label" data-key="longitude">Longitude:</span> <span id="lon">Loading...</span></p>
+    <p><span class="label" data-key="altitude">Altitude:</span> <span id="alt">Loading...</span> m</p>
+    <p><span class="label" data-key="object">Detected Object:</span> <span id="object">Loading...</span></p>
+    <hr>
+    <p><span class="label" data-key="temperature">Temperature:</span> <span id="temp">Loading...</span> °C</p>
+    <p><span class="label" data-key="humidity">Humidity:</span> <span id="humidity">Loading...</span> %</p>
+    <p><span class="label" data-key="airQuality">Air Quality:</span> <span id="air">Loading...</span></p>
+    <p><span class="label" data-key="battery">Battery:</span> <span id="battery">Loading...</span> %</p>
+  </div>
+
+  <div class="buttons">
+    <button id="forwardBtn">Forward</button>
+    <button id="backwardBtn">Backward</button>
+    <button id="rotateBtn">Rotate  </button>
+    <button id="landBtn">Land</button>
+    <button id="takeoffBtn">Take Off</button>
+    <button id="languageBtn">Français</button>
+  </div>
+
+  <script>
+    const translations = {
+      en: {
+        title: "Drone Live Info",
+        latitude: "Latitude:",
+        longitude: "Longitude:",
+        altitude: "Altitude:",
+        object: "Detected Object:",
+        temperature: "Temperature:",
+        humidity: "Humidity:",
+        airQuality: "Air Quality:",
+        battery: "Battery:",
+        forward: "Forward",
+        backward: "Backward",
+        rotate: "Rotate",
+        land: "Land",
+        takeoff: "Take Off",
+        languageBtn: "Français"
+      },
+      fr: {
+        title: "Infos en direct du drone",
+        latitude: "Latitude :",
+        longitude: "Longitude :",
+        altitude: "Altitude :",
+        object: "Objet détecté :",
+        temperature: "Température :",
+        humidity: "Humidité :",
+        airQuality: "Qualité de l'air :",
+        battery: "Batterie :",
+        forward: "Avancer",
+        backward: "Reculer",
+        rotate: "Pivoter",
+        land: "Atterrir",
+        takeoff: "Décoller",
+        languageBtn: "English"
+      }
+    };
+
+    let currentLang = "en";
+
+    function translateUI() {
+      const t = translations[currentLang];
+      document.getElementById("title").textContent = t.title;
+      document.querySelectorAll("[data-key]").forEach(el => {
+        const key = el.getAttribute("data-key");
+        el.textContent = t[key];
+      });
+      document.getElementById("forwardBtn").textContent = t.forward;
+      document.getElementById("backwardBtn").textContent = t.backward;
+      document.getElementById("rotateBtn").textContent = t.rotate;
+      document.getElementById("landBtn").textContent = t.land;
+      document.getElementById("takeoffBtn").textContent = t.takeoff;
+      document.getElementById("languageBtn").textContent = t.languageBtn;
+    }
+
+    function toggleLanguage() {
+      currentLang = currentLang === "en" ? "fr" : "en";
+      translateUI();
+    }
+
+    function getMockDroneData() {
+      return {
+        lat: (Math.random() * 180 - 90).toFixed(6),
+        lon: (Math.random() * 360 - 180).toFixed(6),
+        alt: (Math.random() * 100).toFixed(1),
+        object: ["Tree", "Car", "Person", "Nothing Detected"][Math.floor(Math.random() * 4)],
+        temp: (Math.random() * 15 + 15).toFixed(1),
+        humidity: (Math.random() * 50 + 30).toFixed(0),
+        air: ["Good", "Moderate", "Unhealthy", "Hazardous"][Math.floor(Math.random() * 4)],
+        battery: (Math.random() * 100).toFixed(0)
+      };
+    }
+
+    function updateDroneInfo() {
+      const data = getMockDroneData();
+      document.getElementById('lat').textContent = data.lat;
+      document.getElementById('lon').textContent = data.lon;
+      document.getElementById('alt').textContent = data.alt;
+      document.getElementById('object').textContent = data.object;
+      document.getElementById('temp').textContent = data.temp;
+      document.getElementById('humidity').textContent = data.humidity;
+      document.getElementById('air').textContent = data.air;
+      document.getElementById('battery').textContent = data.battery;
+    }
+
+    // Simulated button actions
+    document.getElementById('forwardBtn').addEventListener('click', () => {
+      alert(currentLang === "en" ? "Moving Forward" : "Avancer");
+    });
+
+    document.getElementById('backwardBtn').addEventListener('click', () => {
+      alert(currentLang === "en" ? "Moving Backward" : "Reculer");
+    });
+
+    document.getElementById('rotateBtn').addEventListener('click', () => {
+      alert(currentLang === "en" ? "Rotating" : "Pivoter");
+    });
+
+    document.getElementById('landBtn').addEventListener('click', () => {
+      alert(currentLang === "en" ? "Landing" : "Atterrir");
+    });
+
+    document.getElementById('takeoffBtn').addEventListener('click', () => {
+      alert(currentLang === "en" ? "Taking Off" : "Décoller");
+    });
+
+    document.getElementById('languageBtn').addEventListener('click', toggleLanguage);
+
+    // Init
+    translateUI();
+    updateDroneInfo();
+    setInterval(updateDroneInfo, 2000);
+  </script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log('Service Worker Registered'));
+  }
+</script>
+</body>
+</html>  
